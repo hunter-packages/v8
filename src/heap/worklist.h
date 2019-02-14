@@ -12,7 +12,7 @@
 #include "src/base/logging.h"
 #include "src/base/macros.h"
 #include "src/base/platform/mutex.h"
-#include "testing/gtest/include/gtest/gtest_prod.h"  // nogncheck
+#include <gtest/gtest_prod.h>  // nogncheck
 
 namespace v8 {
 namespace internal {

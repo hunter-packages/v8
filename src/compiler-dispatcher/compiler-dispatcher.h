@@ -20,7 +20,7 @@
 #include "src/globals.h"
 #include "src/identity-map.h"
 #include "src/maybe-handles.h"
-#include "testing/gtest/include/gtest/gtest_prod.h"  // nogncheck
+#include <gtest/gtest_prod.h>  // nogncheck
 
 namespace v8 {
 

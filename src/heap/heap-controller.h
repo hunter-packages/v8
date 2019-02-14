@@ -8,7 +8,7 @@
 #include <cstddef>
 #include "src/allocation.h"
 #include "src/heap/heap.h"
-#include "testing/gtest/include/gtest/gtest_prod.h"  // nogncheck
+#include <gtest/gtest_prod.h>  // nogncheck
 
 namespace v8 {
 namespace internal {
