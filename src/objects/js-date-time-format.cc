@@ -766,7 +766,7 @@ std::unique_ptr<icu::TimeZone> CreateTimeZone(Isolate* isolate,
       JSDateTimeFormat::CanonicalizeTimeZoneID(isolate, timezone);
   if (canonicalized.empty()) return std::unique_ptr<icu::TimeZone>();
   std::unique_ptr<icu::TimeZone> tz(
-      icu::TimeZone::createTimeZone(canonicalized.c_str()));
+      icu::TimeZone::createTimeZone(icu::UnicodeString(canonicalized.c_str())));
   // 18.b If the result of IsValidTimeZoneName(timeZone) is false, then
   // i. Throw a RangeError exception.
   if (!IsValidTimeZoneName(*tz)) return std::unique_ptr<icu::TimeZone>();
@@ -1051,7 +1051,7 @@ MaybeHandle<JSDateTimeFormat> JSDateTimeFormat::Initialize(
   CHECK(U_SUCCESS(status));
 
   // 15.Let hcDefault be dataLocaleData.[[hourCycle]].
-  icu::UnicodeString hour_pattern = generator->getBestPattern("jjmm", status);
+  icu::UnicodeString hour_pattern = generator->getBestPattern(icu::UnicodeString("jjmm"), status);
   CHECK(U_SUCCESS(status));
   Intl::HourCycle hc_default = HourCycleFromPattern(hour_pattern);
 

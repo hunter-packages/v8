@@ -316,7 +316,7 @@ MaybeHandle<JSNumberFormat> JSNumberFormat::Initialize(
     //    specified in 6.1
     std::transform(currency.begin(), currency.end(), currency.begin(), toupper);
     // c. Let cDigits be CurrencyDigits(currency).
-    currency_ustr = currency.c_str();
+    currency_ustr = icu::UnicodeString(currency.c_str());
     c_digits = CurrencyDigits(currency_ustr);
   }
 
