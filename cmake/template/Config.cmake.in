@@ -1,0 +1,11 @@
+@PACKAGE_INIT@
+
+find_package(GTest CONFIG REQUIRED)
+find_package(ICU CONFIG REQUIRED)
+
+if(@ANDROID@)
+  find_package(android_log REQUIRED)
+endif()
+
+include("${CMAKE_CURRENT_LIST_DIR}/@TARGETS_EXPORT_NAME@.cmake")
+check_required_components("@PROJECT_NAME@")
