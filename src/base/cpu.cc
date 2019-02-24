@@ -10,7 +10,7 @@
 #if V8_OS_LINUX
 #include <linux/auxvec.h>  // AT_HWCAP
 #endif
-#if V8_GLIBC_PREREQ(2, 16)
+#if V8_GLIBC_PREREQ(2, 16) && !defined(V8_NO_GETAUXVAL)
 #include <sys/auxv.h>  // getauxval()
 #endif
 #if V8_OS_QNX
@@ -110,7 +110,7 @@ static V8_INLINE void __cpuid(int cpu_info[4], int info_type) {
 
 static uint32_t ReadELFHWCaps() {
   uint32_t result = 0;
-#if V8_GLIBC_PREREQ(2, 16)
+#if V8_GLIBC_PREREQ(2, 16) && !defined(V8_NO_GETAUXVAL)
   result = static_cast<uint32_t>(getauxval(AT_HWCAP));
 #else
   // Read the ELF HWCAP flags by parsing /proc/self/auxv.
