@@ -59,6 +59,10 @@ set(emit_builtins_as_inline_asm FALSE) # WIN32 + Clang
 
 if(RASPBERRY_PI)
   set(v8_enable_embedded_builtins FALSE)
+elseif(APPLE)
+  # Xcode + Clang
+  # embedded.S:8:15: error: unexpected token in '.section' directive
+  set(v8_enable_embedded_builtins FALSE)
 else()
   set(v8_enable_embedded_builtins TRUE)
 endif()
