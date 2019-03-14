@@ -1365,6 +1365,10 @@ target_include_directories(
     ${torque_generated_parentdir}
 )
 
+# See BUILD.gn, v8_init, sources
+add_library(v8_init src/setup-isolate-full.cc)
+target_link_libraries(v8_init PUBLIC v8_initializers)
+
 target_link_libraries(v8_libplatform PUBLIC v8_libbase)
 target_link_libraries(v8_libsampler PUBLIC v8_libbase)
 target_link_libraries(v8_base PUBLIC v8_libsampler)
@@ -1534,6 +1538,7 @@ install(
         v8_libbase
         v8_libplatform
         v8_libsampler
+        v8_init
         v8_initializers
         v8_nosnapshot
         v8_snapshot
