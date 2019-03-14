@@ -1121,6 +1121,10 @@ set(torque_base_sources
 add_library(torque_base ${torque_base_sources})
 target_link_libraries(torque_base PUBLIC v8_libbase)
 
+# See BUILD.gn, torque, sources
+add_executable(torque src/torque/torque.cc)
+target_link_libraries(torque PRIVATE torque_base)
+
 set(
     v8_extras_libraries_source
     ${CMAKE_CURRENT_BINARY_DIR}/extras-libraries.cc
