@@ -1133,7 +1133,6 @@ add_library(
 )
 target_link_libraries(v8_snapshot PUBLIC v8_extras_libraries)
 
-target_link_libraries(v8_base PUBLIC v8_libbase)
 target_link_libraries(v8_inspector PUBLIC v8_base)
 target_link_libraries(v8_libplatform PUBLIC v8_libbase)
 target_link_libraries(v8_libsampler PUBLIC v8_libbase)
