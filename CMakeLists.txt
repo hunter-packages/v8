@@ -1272,9 +1272,103 @@ add_custom_command(
         ${torque_output_files}
 )
 
+# See BUILD.gn, v8_initializers, sources
+set(
+    v8_initializer_sources
+    src/builtins/builtins-arguments-gen.cc
+    src/builtins/builtins-arguments-gen.h
+    src/builtins/builtins-array-gen.cc
+    src/builtins/builtins-array-gen.h
+    src/builtins/builtins-async-function-gen.cc
+    src/builtins/builtins-async-gen.cc
+    src/builtins/builtins-async-gen.h
+    src/builtins/builtins-async-generator-gen.cc
+    src/builtins/builtins-async-iterator-gen.cc
+    src/builtins/builtins-bigint-gen.cc
+    src/builtins/builtins-boolean-gen.cc
+    src/builtins/builtins-call-gen.cc
+    src/builtins/builtins-call-gen.h
+    src/builtins/builtins-collections-gen.cc
+    src/builtins/builtins-console-gen.cc
+    src/builtins/builtins-constructor-gen.cc
+    src/builtins/builtins-constructor-gen.h
+    src/builtins/builtins-constructor.h
+    src/builtins/builtins-conversion-gen.cc
+    src/builtins/builtins-data-view-gen.h
+    src/builtins/builtins-date-gen.cc
+    src/builtins/builtins-debug-gen.cc
+    src/builtins/builtins-function-gen.cc
+    src/builtins/builtins-generator-gen.cc
+    src/builtins/builtins-global-gen.cc
+    src/builtins/builtins-handler-gen.cc
+    src/builtins/builtins-ic-gen.cc
+    src/builtins/builtins-internal-gen.cc
+    src/builtins/builtins-interpreter-gen.cc
+    src/builtins/builtins-intl-gen.cc
+    src/builtins/builtins-iterator-gen.cc
+    src/builtins/builtins-iterator-gen.h
+    src/builtins/builtins-lazy-gen.cc
+    src/builtins/builtins-lazy-gen.h
+    src/builtins/builtins-math-gen.cc
+    src/builtins/builtins-math-gen.h
+    src/builtins/builtins-microtask-queue-gen.cc
+    src/builtins/builtins-number-gen.cc
+    src/builtins/builtins-object-gen.cc
+    src/builtins/builtins-promise-gen.cc
+    src/builtins/builtins-promise-gen.h
+    src/builtins/builtins-proxy-gen.cc
+    src/builtins/builtins-proxy-gen.h
+    src/builtins/builtins-reflect-gen.cc
+    src/builtins/builtins-regexp-gen.cc
+    src/builtins/builtins-regexp-gen.h
+    src/builtins/builtins-sharedarraybuffer-gen.cc
+    src/builtins/builtins-string-gen.cc
+    src/builtins/builtins-string-gen.h
+    src/builtins/builtins-symbol-gen.cc
+    src/builtins/builtins-typed-array-gen.cc
+    src/builtins/builtins-typed-array-gen.h
+    src/builtins/builtins-utils-gen.h
+    src/builtins/builtins-wasm-gen.cc
+    src/builtins/growable-fixed-array-gen.cc
+    src/builtins/growable-fixed-array-gen.h
+    src/builtins/setup-builtins-internal.cc
+    src/code-stub-assembler.cc
+    src/code-stub-assembler.h
+    src/heap/setup-heap-internal.cc
+    src/ic/accessor-assembler.cc
+    src/ic/accessor-assembler.h
+    src/ic/binary-op-assembler.cc
+    src/ic/binary-op-assembler.h
+    src/ic/keyed-store-generic.cc
+    src/ic/keyed-store-generic.h
+    src/interpreter/interpreter-assembler.cc
+    src/interpreter/interpreter-assembler.h
+    src/interpreter/interpreter-generator.cc
+    src/interpreter/interpreter-generator.h
+    src/interpreter/interpreter-intrinsics-generator.cc
+    src/interpreter/interpreter-intrinsics-generator.h
+    ${torque_output_files}
+)
+
+if(x64_architecture)
+  list(
+      APPEND
+      v8_initializer_sources
+      src/builtins/x64/builtins-x64.cc
+  )
+endif()
+
+add_library(v8_initializers ${v8_initializer_sources})
+target_include_directories(
+    v8_initializers
+    PRIVATE
+    ${torque_generated_parentdir}
+)
+
 target_link_libraries(v8_libplatform PUBLIC v8_libbase)
 target_link_libraries(v8_libsampler PUBLIC v8_libbase)
 target_link_libraries(v8_base PUBLIC v8_libsampler)
+target_link_libraries(v8_initializers PUBLIC v8_base)
 
 if(x64_architecture)
   target_compile_definitions(
@@ -1440,6 +1534,7 @@ install(
         v8_libbase
         v8_libplatform
         v8_libsampler
+        v8_initializers
         v8_nosnapshot
         v8_snapshot
     EXPORT "${TARGETS_EXPORT_NAME}"
