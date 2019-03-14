@@ -1084,6 +1084,55 @@ endif()
 
 add_library(v8_libbase ${v8_libbase_sources})
 
+set(
+    v8_extras_libraries_source
+    ${CMAKE_CURRENT_BINARY_DIR}/extras-libraries.cc
+)
+
+find_package(PythonInterp 2 REQUIRED) # PYTHON_EXECUTABLE
+
+add_custom_command(
+    OUTPUT
+        ${v8_extras_libraries_source}
+    COMMAND
+        ${PYTHON_EXECUTABLE}
+        ${CMAKE_CURRENT_LIST_DIR}/tools/js2c.py
+        ${v8_extras_libraries_source}
+        EXTRAS
+        ${CMAKE_CURRENT_LIST_DIR}/test/cctest/test-extra.js
+    DEPENDS
+        ${CMAKE_CURRENT_LIST_DIR}/tools/js2c.py
+        ${CMAKE_CURRENT_LIST_DIR}/test/cctest/test-extra.js
+    COMMENT
+        "Generating ${v8_extras_libraries_source} file"
+)
+
+# We have to create separate target because generated file used in
+# v8_nosnapshot and v8_snapshot.
+# From:
+# - https://cmake.org/cmake/help/latest/command/add_custom_command.html
+#
+#    Do not list the output in more than one independent target that
+#    may build in parallel or the two instances of the rule may conflict
+add_library(
+    v8_extras_libraries
+    ${v8_extras_libraries_source}
+)
+target_link_libraries(v8_extras_libraries PUBLIC v8_base)
+
+add_library(
+    v8_nosnapshot
+    src/snapshot/embedded-empty.cc
+    src/snapshot/snapshot-empty.cc
+)
+target_link_libraries(v8_nosnapshot PUBLIC v8_extras_libraries)
+
+add_library(
+    v8_snapshot
+    src/setup-isolate-deserialize.cc
+)
+target_link_libraries(v8_snapshot PUBLIC v8_extras_libraries)
+
 target_link_libraries(v8_base PUBLIC v8_libbase)
 target_link_libraries(v8_inspector PUBLIC v8_base)
 target_link_libraries(v8_libplatform PUBLIC v8_libbase)
@@ -1235,10 +1284,13 @@ install(
 install(
     TARGETS
         v8_base
+        v8_extras_libraries
         v8_inspector
         v8_libbase
         v8_libplatform
         v8_libsampler
+        v8_nosnapshot
+        v8_snapshot
     EXPORT "${TARGETS_EXPORT_NAME}"
     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
