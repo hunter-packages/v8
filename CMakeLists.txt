@@ -826,7 +826,6 @@ endif()
 list(
     APPEND
     v8_base_sources
-    src/setup-isolate-deserialize.cc
     src/snapshot/natives-external.cc
     src/snapshot/snapshot-external.cc
 )
