@@ -63,15 +63,7 @@ set(is_aix FALSE)
 
 set(emit_builtins_as_inline_asm FALSE) # WIN32 + Clang
 
-if(RASPBERRY_PI)
-  set(v8_enable_embedded_builtins FALSE)
-elseif(APPLE)
-  # Xcode + Clang
-  # embedded.S:8:15: error: unexpected token in '.section' directive
-  set(v8_enable_embedded_builtins FALSE)
-else()
-  set(v8_enable_embedded_builtins TRUE)
-endif()
+set(v8_enable_embedded_builtins FALSE)
 # }
 
 string(COMPARE EQUAL "${CMAKE_SYSTEM_NAME}" "Linux" is_linux)
@@ -1129,7 +1121,6 @@ target_link_libraries(v8_extras_libraries PUBLIC v8_base)
 
 add_library(
     v8_nosnapshot
-    src/snapshot/embedded-empty.cc
     src/snapshot/snapshot-empty.cc
 )
 target_link_libraries(v8_nosnapshot PUBLIC v8_extras_libraries)
