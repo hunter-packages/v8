@@ -1174,6 +1174,104 @@ add_library(
 target_link_libraries(v8_snapshot PUBLIC v8_extras_libraries)
 
 target_link_libraries(v8_inspector PUBLIC v8_base)
+
+# See BUILD.gn, torque_files
+set(
+    torque_files
+    ${CMAKE_CURRENT_LIST_DIR}/src/builtins/base.tq
+    ${CMAKE_CURRENT_LIST_DIR}/src/builtins/frames.tq
+    ${CMAKE_CURRENT_LIST_DIR}/src/builtins/arguments.tq
+    ${CMAKE_CURRENT_LIST_DIR}/src/builtins/array.tq
+    ${CMAKE_CURRENT_LIST_DIR}/src/builtins/array-copywithin.tq
+    ${CMAKE_CURRENT_LIST_DIR}/src/builtins/array-filter.tq
+    ${CMAKE_CURRENT_LIST_DIR}/src/builtins/array-foreach.tq
+    ${CMAKE_CURRENT_LIST_DIR}/src/builtins/array-join.tq
+    ${CMAKE_CURRENT_LIST_DIR}/src/builtins/array-lastindexof.tq
+    ${CMAKE_CURRENT_LIST_DIR}/src/builtins/array-of.tq
+    ${CMAKE_CURRENT_LIST_DIR}/src/builtins/array-map.tq
+    ${CMAKE_CURRENT_LIST_DIR}/src/builtins/array-reverse.tq
+    ${CMAKE_CURRENT_LIST_DIR}/src/builtins/array-slice.tq
+    ${CMAKE_CURRENT_LIST_DIR}/src/builtins/array-splice.tq
+    ${CMAKE_CURRENT_LIST_DIR}/src/builtins/array-unshift.tq
+    ${CMAKE_CURRENT_LIST_DIR}/src/builtins/collections.tq
+    ${CMAKE_CURRENT_LIST_DIR}/src/builtins/data-view.tq
+    ${CMAKE_CURRENT_LIST_DIR}/src/builtins/extras-utils.tq
+    ${CMAKE_CURRENT_LIST_DIR}/src/builtins/object-fromentries.tq
+    ${CMAKE_CURRENT_LIST_DIR}/src/builtins/iterator.tq
+    ${CMAKE_CURRENT_LIST_DIR}/src/builtins/string-startswith.tq
+    ${CMAKE_CURRENT_LIST_DIR}/src/builtins/typed-array.tq
+    ${CMAKE_CURRENT_LIST_DIR}/src/builtins/typed-array-createtypedarray.tq
+    ${CMAKE_CURRENT_LIST_DIR}/test/torque/test-torque.tq
+    ${CMAKE_CURRENT_LIST_DIR}/third_party/v8/builtins/array-sort.tq
+)
+
+# See BUILD.gn, torque_namespaces
+set(
+    torque_namespaces
+    arguments
+    array
+    array-copywithin
+    array-filter
+    array-foreach
+    array-join
+    array-map
+    array-of
+    array-reverse
+    array-slice
+    array-splice
+    array-unshift
+    array-lastindexof
+    base
+    collections
+    data-view
+    extras-utils
+    iterator
+    object
+    string
+    test
+    typed-array
+    typed-array-createtypedarray
+)
+
+set(torque_generated_parentdir ${CMAKE_CURRENT_BINARY_DIR}/tgd)
+set(torque_generated_dir ${torque_generated_parentdir}/torque-generated)
+
+set(
+    torque_output_files
+    ${torque_generated_dir}/builtin-definitions-from-dsl.h
+    ${torque_generated_dir}/class-definitions-from-dsl.h
+)
+
+foreach(ns IN LISTS torque_namespaces)
+  list(
+      APPEND
+      torque_output_files
+      ${torque_generated_dir}/builtins-${ns}-from-dsl-gen.cc
+      ${torque_generated_dir}/builtins-${ns}-from-dsl-gen.h
+  )
+endforeach()
+
+add_custom_command(
+    COMMAND
+        ${CMAKE_COMMAND}
+        -E
+        make_directory
+        ${torque_generated_dir}
+    COMMAND
+        ${PYTHON_EXECUTABLE}
+        ${CMAKE_CURRENT_LIST_DIR}/tools/run.py
+        $<TARGET_FILE:torque>
+        -o
+        ${torque_generated_dir}
+        ${torque_files}
+    DEPENDS
+        ${CMAKE_CURRENT_LIST_DIR}/tools/run.py
+        torque
+        ${torque_files}
+    OUTPUT
+        ${torque_output_files}
+)
+
 target_link_libraries(v8_libplatform PUBLIC v8_libbase)
 target_link_libraries(v8_libsampler PUBLIC v8_libbase)
 target_link_libraries(v8_base PUBLIC v8_libsampler)
