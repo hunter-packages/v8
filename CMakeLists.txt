@@ -8,6 +8,12 @@ HunterGate(
 
 project(v8 VERSION 7.4.98 LANGUAGES C CXX ASM)
 
+# GN: see 'v8_use_snapshot'
+option(V8_USE_SNAPSHOT "..." OFF)
+
+# GN: see 'v8_use_external_startup_data'
+option(V8_USE_EXTERNAL_STARTUP_DATA "..." OFF)
+
 hunter_add_package(GTest)
 find_package(GTest CONFIG REQUIRED)
 
@@ -821,14 +827,16 @@ elseif(s390_architecture OR s390x_architecture)
   )
 endif()
 
-# See BUILD.gn, v8_external_snapshot, sources
-# Not a separate target because of the cyclic dependencies
-list(
-    APPEND
-    v8_base_sources
-    src/snapshot/natives-external.cc
-    src/snapshot/snapshot-external.cc
-)
+if(V8_USE_SNAPSHOT AND V8_USE_EXTERNAL_STARTUP_DATA)
+  # See BUILD.gn, v8_external_snapshot, sources
+  # Not a separate target because of the cyclic dependencies
+  list(
+      APPEND
+      v8_base_sources
+      src/snapshot/natives-external.cc
+      src/snapshot/snapshot-external.cc
+  )
+endif()
 
 if(v8_enable_embedded_builtins AND emit_builtins_as_inline_asm)
   list(
@@ -1175,8 +1183,6 @@ target_compile_definitions(
     $<BUILD_INTERFACE:V8_EMBEDDED_BUILTINS>
     $<BUILD_INTERFACE:V8_INTL_SUPPORT>
     $<BUILD_INTERFACE:V8_TYPED_ARRAY_MAX_SIZE_IN_HEAP=64>
-    $<BUILD_INTERFACE:V8_USE_EXTERNAL_STARTUP_DATA>
-    $<BUILD_INTERFACE:V8_USE_SNAPSHOT>
     $<BUILD_INTERFACE:VERIFY_HEAP>
 
     # Debug
@@ -1188,6 +1194,22 @@ target_compile_definitions(
     $<BUILD_INTERFACE:$<$<CONFIG:Debug>:ENABLE_SLOW_DCHECKS=1>>
     $<BUILD_INTERFACE:$<$<CONFIG:Debug>:DEBUG=1>>
 )
+
+if(V8_USE_SNAPSHOT)
+  target_compile_definitions(
+      v8_libbase
+      PUBLIC
+      $<BUILD_INTERFACE:V8_USE_SNAPSHOT>
+  )
+endif()
+
+if(V8_USE_EXTERNAL_STARTUP_DATA)
+  target_compile_definitions(
+      v8_libbase
+      PUBLIC
+      $<BUILD_INTERFACE:V8_USE_EXTERNAL_STARTUP_DATA>
+  )
+endif()
 
 if(NOT ANDROID)
   target_compile_definitions(
