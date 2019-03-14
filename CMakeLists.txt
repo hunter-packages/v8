@@ -1083,6 +1083,44 @@ endif()
 
 add_library(v8_libbase ${v8_libbase_sources})
 
+# See BUILD.gn, torque_base, sources
+set(torque_base_sources
+    src/torque/ast.h
+    src/torque/cfg.cc
+    src/torque/cfg.h
+    src/torque/contextual.h
+    src/torque/csa-generator.cc
+    src/torque/csa-generator.h
+    src/torque/declarable.cc
+    src/torque/declarable.h
+    src/torque/declaration-visitor.cc
+    src/torque/declaration-visitor.h
+    src/torque/declarations.cc
+    src/torque/declarations.h
+    src/torque/earley-parser.cc
+    src/torque/earley-parser.h
+    src/torque/file-visitor.cc
+    src/torque/file-visitor.h
+    src/torque/global-context.h
+    src/torque/implementation-visitor.cc
+    src/torque/implementation-visitor.h
+    src/torque/instructions.cc
+    src/torque/instructions.h
+    src/torque/source-positions.cc
+    src/torque/source-positions.h
+    src/torque/torque-parser.cc
+    src/torque/torque-parser.h
+    src/torque/type-oracle.cc
+    src/torque/type-oracle.h
+    src/torque/types.cc
+    src/torque/types.h
+    src/torque/utils.cc
+    src/torque/utils.h
+  )
+
+add_library(torque_base ${torque_base_sources})
+target_link_libraries(torque_base PUBLIC v8_libbase)
+
 set(
     v8_extras_libraries_source
     ${CMAKE_CURRENT_BINARY_DIR}/extras-libraries.cc
