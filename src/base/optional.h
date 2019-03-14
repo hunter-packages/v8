@@ -441,8 +441,8 @@ class OPTIONAL_DECLSPEC_EMPTY_BASES Optional
 
   // Defer default/copy/move constructor implementation to OptionalBase.
   constexpr Optional() = default;
-  constexpr Optional(const Optional& other) V8_NOEXCEPT = default;
-  constexpr Optional(Optional&& other) V8_NOEXCEPT = default;
+  constexpr Optional(const Optional& other) = default;
+  constexpr Optional(Optional&& other) = default;
 
   constexpr Optional(nullopt_t) {}  // NOLINT(runtime/explicit)
 
@@ -526,8 +526,8 @@ class OPTIONAL_DECLSPEC_EMPTY_BASES Optional
   ~Optional() = default;
 
   // Defer copy-/move- assign operator implementation to OptionalBase.
-  Optional& operator=(const Optional& other) V8_NOEXCEPT = default;
-  Optional& operator=(Optional&& other) V8_NOEXCEPT = default;
+  Optional& operator=(const Optional& other) = default;
+  Optional& operator=(Optional&& other) = default;
 
   Optional& operator=(nullopt_t) {
     FreeIfNeeded();
