@@ -1358,6 +1358,22 @@ if(x64_architecture)
   )
 endif()
 
+if(arm64_architecture)
+  list(
+      APPEND
+      v8_initializer_sources
+      src/builtins/arm64/builtins-arm64.cc
+  )
+endif()
+
+if(arm_architecture)
+  list(
+      APPEND
+      v8_initializer_sources
+      src/builtins/arm/builtins-arm.cc
+  )
+endif()
+
 add_library(v8_initializers ${v8_initializer_sources})
 target_include_directories(
     v8_initializers
