@@ -1570,6 +1570,8 @@ install(
         v8_initializers
         v8_nosnapshot
         v8_snapshot
+        torque
+        torque_base
     EXPORT "${TARGETS_EXPORT_NAME}"
     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
