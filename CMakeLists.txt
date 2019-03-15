@@ -1263,6 +1263,14 @@ foreach(ns IN LISTS torque_namespaces)
   )
 endforeach()
 
+if(CMAKE_CROSSCOMPILING)
+  include(hunter_experimental_add_host_project)
+  hunter_experimental_add_host_project(cmake/host)
+  set(torque_executable "${HUNTER_HOST_ROOT}/bin/torque")
+else()
+  set(torque_executable $<TARGET_FILE:torque>)
+endif()
+
 add_custom_command(
     COMMAND
         ${CMAKE_COMMAND}
@@ -1272,7 +1280,7 @@ add_custom_command(
     COMMAND
         ${PYTHON_EXECUTABLE}
         ${CMAKE_CURRENT_LIST_DIR}/tools/run.py
-        $<TARGET_FILE:torque>
+        ${torque_executable}
         -o
         ${torque_generated_dir}
         ${torque_files}
