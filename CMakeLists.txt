@@ -34,8 +34,20 @@ hunter_check_toolchain_definition(
 
 hunter_check_toolchain_definition(
     NAME __amd64__
-    DEFINED x64_architecture
+    DEFINED amd64_architecture
 )
+
+# https://docs.microsoft.com/en-us/cpp/preprocessor/predefined-macros?view=vs-2017#microsoft-specific-predefined-macros
+hunter_check_toolchain_definition(
+    NAME _M_AMD64
+    DEFINED m_amd64_architecture
+)
+
+if(amd64_architecture OR m_amd64_architecture)
+  set(x64_architecture YES)
+else()
+  set(x64_architecture NO)
+endif()
 
 hunter_check_toolchain_definition(
     NAME __i686__
