@@ -1446,6 +1446,8 @@ set(
 
 add_library(v8_libsampler ${v8_libsampler_sources})
 
+find_package(PythonInterp 2 REQUIRED) # PYTHON_EXECUTABLE
+
 set(
     protocol_generator_py
     ${CMAKE_CURRENT_LIST_DIR}/third_party/inspector_protocol/CodeGenerator.py
@@ -1766,8 +1768,6 @@ set(
     v8_extras_libraries_source
     ${CMAKE_CURRENT_BINARY_DIR}/extras-libraries.cc
 )
-
-find_package(PythonInterp 2 REQUIRED) # PYTHON_EXECUTABLE
 
 add_custom_command(
     OUTPUT
